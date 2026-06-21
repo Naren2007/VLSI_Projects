@@ -1,0 +1,6 @@
+17:08:44 **** Clean-only build of configuration Nios II for project nios_Image_Processing ****
+make clean 
+[nios_Image_Processing clean complete]
+
+17:08:44 Build Finished (took 405ms)
+

@@ -1,0 +1,122 @@
+module Image_Processor (
+    input clk,
+    input rst,
+    input  [7:0] input_pixel,
+    input  [2:0] operation,
+    output reg [7:0] output_pixel
+);
+
+    // ---------------- LINE BUFFERS FOR SOBEL ----------------
+    reg [7:0] line0 [0:511];
+    reg [7:0] line1 [0:511];
+    reg [7:0] line2 [0:511];
+
+    // ---------------- TEMP / CONTROL ----------------
+    reg [7:0] prev_pixel;  // for sharpening
+    integer i, j, k;
+    integer idx;
+    integer temp;
+    integer Gx, Gy;
+    integer edge_var;
+
+    // ============================================================
+    // MAIN PROCESSING
+    // ============================================================
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            output_pixel <= 8'd0;
+            prev_pixel <= 8'd0;
+            i <= 0; j <= 0; k <= 0;
+
+            // Reset line buffers
+            for (idx = 0; idx < 512; idx = idx + 1) begin
+                line0[idx] <= 0;
+                line1[idx] <= 0;
+                line2[idx] <= 0;
+            end
+        end else begin
+            case (operation)
+
+                // ---------------- NEGATIVE ----------------
+                3'b011: output_pixel <= ~input_pixel;
+
+                // ---------------- SHARPENING ----------------
+                3'b001: begin
+                    if (i == 0)
+                        temp = 2 * input_pixel;
+                    else
+                        temp = 2 * input_pixel - prev_pixel;
+
+                    if (temp < 0)   temp = 0;
+                    if (temp > 255) temp = 255;
+
+                    output_pixel <= temp[7:0];
+                    prev_pixel <= input_pixel;
+
+                    i <= i + 1;
+                end
+
+                // ---------------- BLACK & WHITE ----------------
+                3'b100: output_pixel <= (input_pixel > 8'd127) ? 8'd255 : 8'd0;
+
+                // ---------------- MIRROR (row-wise only) ----------------
+                3'b101: begin //some mistake
+                    line0[k] <= input_pixel;
+
+                    if (j > 0)
+                        output_pixel <= line1[511 - k];
+                    else
+                        output_pixel <= 8'd0;
+
+                    k <= k + 1;
+                    if (k == 511) begin
+                        k <= 0;
+                        j <= (j == 511) ? 0 : j + 1;
+
+                        // Swap buffers
+                        for (idx = 0; idx < 512; idx = idx + 1)
+                            line1[idx] <= line0[idx];
+                    end
+                end
+
+                // ---------------- EDGE DETECTION (FPGA-SAFE) ----------------
+                3'b110: begin
+                    if (j > 1 && k > 0 && k < 511) begin
+                        Gx = -line0[k-1] + line0[k+1]
+                             -2*line1[k-1] + 2*line1[k+1]
+                             -line2[k-1] + line2[k+1];
+
+                        Gy =  line0[k-1] + 2*line0[k] + line0[k+1]
+                             -line2[k-1] - 2*line2[k] - line2[k+1];
+
+                        if (Gx < 0) Gx = -Gx;
+                        if (Gy < 0) Gy = -Gy;
+
+                        edge_var = Gx + Gy;
+                        if (edge_var > 255) edge_var = 255;
+
+                        output_pixel <= edge_var[7:0];
+                    end else begin
+                        output_pixel <= 8'd0;
+                    end
+
+                    // Shift line buffers
+                    line0[k] <= line1[k];
+                    line1[k] <= line2[k];
+                    line2[k] <= input_pixel;
+
+                    k <= k + 1;
+                    if (k == 511) begin
+                        k <= 0;
+                        j <= (j == 511) ? 0 : j + 1;
+                    end
+                end
+
+                // ---------------- DEFAULT ----------------
+                default: output_pixel <= input_pixel;
+
+            endcase
+        end
+    end
+
+endmodule

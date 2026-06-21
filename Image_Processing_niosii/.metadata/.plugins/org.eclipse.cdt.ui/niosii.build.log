@@ -1,0 +1,9 @@
+17:37:12 **** Incremental Build of configuration Nios II for project niosii ****
+make all 
+Info: Building ../niosii_bsp/
+E:/intel_quartus/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../niosii_bsp/
+[BSP build complete]
+[niosii build complete]
+
+17:37:13 Build Finished (took 993ms)
+

@@ -1,0 +1,52 @@
+module Image_Processor_Avalon_IP (
+    input  wire        clk,
+    input  wire        reset_n,
+
+    // ---------------- Avalon-MM Slave (Control) ----------------
+    input  wire        avs_write,
+    input  wire        avs_read,
+    input  wire [1:0]  avs_address,      // avs_address=0 for start processing
+    input  wire [31:0] avs_writedata,    // avs_address=1 for seeing flag
+    output reg  [31:0] avs_readdata,     // avs_address=2 for storing parameter like image size,kernal
+
+    // ---------------- Avalon-ST Sink (Input Pixel) --------------
+    input  wire        sink_valid,
+    input  wire [7:0]  sink_data,
+    output wire        sink_ready,
+
+    // ---------------- Avalon-ST Source (Output Pixel) ----------
+    output wire        source_valid,
+    output wire [7:0]  source_data,
+    input  wire        source_ready
+);
+    reg [2:0] operation;
+
+    always @(posedge clk or negedge reset_n) begin
+        if (!reset_n)
+            operation <= 3'b000;
+        else if (avs_write && avs_address == 2'd0)
+            operation <= avs_writedata[2:0];
+    end
+
+    always @(*) begin
+        if (avs_read && avs_address == 2'd0)
+            avs_readdata = {29'd0, operation};
+        else
+            avs_readdata = 32'd0;
+    end
+
+  
+    assign sink_ready   = source_ready;
+    assign source_valid = sink_valid;
+
+    Image_Processor #(
+        .MEM_SIZE(262144)
+    ) u_image_processor (
+        .clk(clk),
+        .rst(!reset_n),
+        .input_pixel(sink_data),
+        .operation(operation),
+        .output_pixel(source_data)
+    );
+
+endmodule
