@@ -1,0 +1,26 @@
+# Navigate to your project directory
+cd ~/riscv_projects
+
+# Assemble (create object file)
+riscv32-unknown-elf-as -march=rv32i your_code.s -o your_code.o
+
+# Link (create executable)
+riscv32-unknown-elf-ld your_code.o -o your_code
+
+# Extract raw binary
+riscv32-unknown-elf-objcopy -O binary your_code program.raw
+
+# Convert to hex (32-bit words only, no addresses)
+python3 << 'EOF'
+with open('program.raw', 'rb') as f:
+    data = f.read()
+
+with open('program.mem', 'w') as out:
+    for i in range(0, len(data), 4):
+        if i + 3 < len(data):
+            word = data[i] | (data[i+1] << 8) | (data[i+2] << 16) | (data[i+3] << 24)
+            out.write(f"{word:08x}\n")
+EOF
+
+# View your program.mem
+cat program.mem
