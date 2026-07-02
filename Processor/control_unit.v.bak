@@ -1,0 +1,124 @@
+module Control_unit(
+   input [6:0] opcode,
+   input [31:25] func7,
+   input [14:12] func3,
+   input zero,
+   output reg pcsrc,
+   output reg [1:0] resultsrc,
+   output reg memwrite,
+   output reg [3:0] alucntrl,
+   output reg alusrc,
+   output reg regwrite,
+   output reg [2:0] immsrc
+);
+
+   reg branch;
+   reg jump;
+
+   always @(*) begin
+      // Default values
+      pcsrc     = 1'b0;
+      resultsrc = 2'b00;
+      memwrite  = 1'b0;
+      alucntrl  = 4'b0000;
+      alusrc    = 1'b0;
+      regwrite  = 1'b0;
+      immsrc    = 3'b000;
+      branch    = 1'b0;
+      jump      = 1'b0;
+
+      case(opcode)
+
+         // Load (lw)
+         7'b0000011 : begin
+            alusrc    = 1'b1;
+            regwrite  = 1'b1;
+            resultsrc = 2'b01;
+            immsrc    = 3'b000;
+            alucntrl  = 4'b0000;   // ADD
+         end
+
+         // I-Type
+         7'b0010011: begin
+            alusrc    = 1'b1;
+            regwrite  = 1'b1;
+            immsrc    = 3'b000;
+
+            case(func3)
+               3'b000: alucntrl = 4'b0000; // ADDI
+               3'b111: alucntrl = 4'b0010; // ANDI
+               3'b110: alucntrl = 4'b0011; // ORI
+               default: alucntrl = 4'b0000;
+            endcase
+         end
+
+         // Branch
+         7'b1100011 : begin
+            branch    = 1'b1;
+            immsrc    = 3'b010;
+            alucntrl  = 4'b0001;   // SUB
+         end
+
+         // Store (sw)
+         7'b0100011 : begin
+            memwrite  = 1'b1;
+            alusrc    = 1'b1;
+            immsrc    = 3'b001;
+            alucntrl  = 4'b0000;   // ADD
+         end
+
+         // R-Type
+         7'b0110011 : begin
+            regwrite = 1'b1;
+
+            case(func3)
+               3'b000: begin
+                  if(func7[30])
+                     alucntrl = 4'b0001;   // SUB
+                  else
+                     alucntrl = 4'b0000;   // ADD
+               end
+
+               3'b111: alucntrl = 4'b0010; // AND
+               3'b110: alucntrl = 4'b0011; // OR
+
+               default: alucntrl = 4'b0000;
+            endcase
+         end
+
+         // JALR
+         7'b1100111 : begin
+            alusrc    = 1'b1;
+            regwrite  = 1'b1;
+            immsrc    = 3'b000;
+            resultsrc = 2'b10;
+            jump      = 1'b1;
+         end
+
+         // JAL
+         7'b1101111 : begin
+            regwrite  = 1'b1;
+            immsrc    = 3'b011;
+            resultsrc = 2'b10;
+            jump      = 1'b1;
+         end
+
+         // LUI
+         7'b0110111 : begin
+            regwrite = 1'b1;
+            alusrc   = 1'b1;
+            immsrc   = 3'b100;
+            alucntrl = 4'b0101;
+         end
+
+         default: begin
+         end
+
+      endcase
+
+      if (jump || (branch && zero))
+         pcsrc = 1'b1;
+
+   end
+
+endmodule

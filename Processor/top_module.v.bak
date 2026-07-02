@@ -1,0 +1,64 @@
+module processor(
+
+    input clk,
+    input reset
+
+);
+
+wire Zero;
+wire [31:0] Instr;
+wire [31:0] PC;
+
+wire PCSrc;
+wire [1:0] ResultSrc;
+wire MemWrite;
+wire [2:0] ALUControl;
+wire ALUSrc;
+wire RegWrite;
+wire [2:0] ImmSrc;
+
+//-------------------------------------------------
+// Control Unit
+//-------------------------------------------------
+
+Control_unit CU(
+
+    .opcode(Instr[6:0]),
+    .func7(Instr[31:25]),
+    .func3(Instr[14:12]),
+    .zero(Zero),
+
+    .pcsrc(PCSrc),
+    .resultsrc(ResultSrc),
+    .memwrite(MemWrite),
+    .alucntrl(ALUControl),
+    .alusrc(ALUSrc),
+    .regwrite(RegWrite),
+    .immsrc(ImmSrc)
+
+);
+
+//-------------------------------------------------
+// Datapath
+//-------------------------------------------------
+
+datapath DP(
+
+    .clk(clk),
+    .reset(reset),
+
+    .RegWrite(RegWrite),
+    .ALUSrc(ALUSrc),
+    .MemWrite(MemWrite),
+    .ResultSrc(ResultSrc),
+    .PCSrc(PCSrc),
+    .ALUControl(ALUControl),
+    .ImmSrc(ImmSrc),
+
+    .Zero(Zero),
+    .Instr(Instr),
+    .PC(PC)
+
+);
+
+endmodule

@@ -1,0 +1,20 @@
+module mux_resultsrc (
+    input  [1:0]  sel,
+    input  [31:0] d0,  // ALUResult
+    input  [31:0] d1,  // ReadData
+    input  [31:0] d2,  // PCPlus4
+    input  [31:0] d3,  // ImmExt (Added for LUI)
+    output reg [31:0] y
+);
+
+    always @(*) begin
+        case(sel)
+            2'b00:   y = d0;
+            2'b01:   y = d1;
+            2'b10:   y = d2;
+            2'b11:   y = d3; // Routes ImmExt to Register File write data
+            default: y = 32'b0;
+        endcase
+    end
+
+endmodule

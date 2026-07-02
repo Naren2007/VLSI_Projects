@@ -1,0 +1,134 @@
+G:/Processor/control_unit_tb.v {1 {vlog -work work -stats=none G:/Processor/control_unit_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module tb_Control_unit
+
+Top level modules:
+	tb_Control_unit
+
+} {} {}} G:/Processor/result_src.v {1 {vlog -work work -stats=none G:/Processor/result_src.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module mux_resultsrc
+
+Top level modules:
+	mux_resultsrc
+
+} {} {}} G:/Processor/datapath.v {1 {vlog -work work -stats=none G:/Processor/datapath.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module datapath
+
+Top level modules:
+	datapath
+
+} {} {}} G:/Processor/alu_tb.v {1 {vlog -work work -stats=none G:/Processor/alu_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module alu_tb
+
+Top level modules:
+	alu_tb
+
+} {} {}} G:/Processor/control_unit.v {1 {vlog -work work -stats=none G:/Processor/control_unit.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module Control_unit
+
+Top level modules:
+	Control_unit
+
+} {} {}} G:/Processor/pc_tb.v {1 {vlog -work work -stats=none G:/Processor/pc_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module pc_tb
+
+Top level modules:
+	pc_tb
+
+} {} {}} G:/Processor/seq_adder.v {1 {vlog -work work -stats=none G:/Processor/seq_adder.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module pc_plus4
+
+Top level modules:
+	pc_plus4
+
+} {} {}} G:/Processor/alu.v {1 {vlog -work work -stats=none G:/Processor/alu.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module alu
+
+Top level modules:
+	alu
+
+} {} {}} G:/Processor/instruction_memory.v {1 {vlog -work work -stats=none G:/Processor/instruction_memory.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module InstructionMemory
+
+Top level modules:
+	InstructionMemory
+
+} {} {}} G:/Processor/top_module_tb.v {1 {vlog -work work -stats=none G:/Processor/top_module_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module processor_tb
+
+Top level modules:
+	processor_tb
+
+} {} {}} G:/Processor/extend_tb.v {1 {vlog -work work -stats=none G:/Processor/extend_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module tb_SignExtend
+
+Top level modules:
+	tb_SignExtend
+
+} {} {}} G:/Processor/branch_adder.v {1 {vlog -work work -stats=none G:/Processor/branch_adder.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module pc_target
+
+Top level modules:
+	pc_target
+
+} {} {}} G:/Processor/regfile.v {1 {vlog -work work -stats=none G:/Processor/regfile.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module register_file
+
+Top level modules:
+	register_file
+
+} {} {}} G:/Processor/extend.v {1 {vlog -work work -stats=none G:/Processor/extend.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module SignExtend
+
+Top level modules:
+	SignExtend
+
+} {} {}} G:/Processor/top_module.v {1 {vlog -work work -stats=none G:/Processor/top_module.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module processor
+
+Top level modules:
+	processor
+
+} {} {}} G:/Processor/pc.v {1 {vlog -work work -stats=none G:/Processor/pc.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module pc
+
+Top level modules:
+	pc
+
+} {} {}} G:/Processor/DataMemory.v {1 {vlog -work work -stats=none G:/Processor/DataMemory.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module DataMemory
+
+Top level modules:
+	DataMemory
+
+} {} {}} G:/Processor/ALUsrc_mux.v {1 {vlog -work work -stats=none G:/Processor/ALUsrc_mux.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module mux_alusrc
+
+Top level modules:
+	mux_alusrc
+
+} {} {}} G:/Processor/pcsrc_mux.v {1 {vlog -work work -stats=none G:/Processor/pcsrc_mux.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module mux_pcsrc
+
+Top level modules:
+	mux_pcsrc
+
+} {} {}}

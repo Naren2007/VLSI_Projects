@@ -1,0 +1,63 @@
+`timescale 1ns/1ps
+
+module processor_tb;
+
+reg clk;
+reg reset;
+
+processor DUT(
+    .clk(clk),
+    .reset(reset)
+);
+
+// Clock generation
+always #5 clk = ~clk;
+
+initial begin
+
+    clk = 0;
+    reset = 1;
+
+    #20;
+    reset = 0;
+
+    #200;
+
+    $finish;
+
+end
+
+// Dump waveform
+initial begin
+    $dumpfile("processor.vcd");
+    $dumpvars(0, processor_tb);
+end
+
+// Display important registers
+initial begin
+
+    $display("-----------------------------------------------------------------------------------------------");
+    $display("Time\tPC\t\tInstr\t\tx1\t\tx2\t\tx3");
+    $display("-----------------------------------------------------------------------------------------------");
+DUT.DP.RF.reg_file[1] = 32'd0;
+DUT.DP.RF.reg_file[2] = 32'd0;
+DUT.DP.RF.reg_file[3] = 32'd0; // Clear x3 to receive the return address
+DUT.DP.RF.reg_file[4] = 32'd0; // Clear x4 to check destination execution
+    forever begin
+        @(posedge clk);
+        #1;
+
+        $display("%0t\t%h\t%h\t%h\t%h\t%h",
+            $time,
+            DUT.DP.PC,
+            DUT.DP.Instr,
+            DUT.DP.RF.reg_file[1],
+            DUT.DP.RF.reg_file[2],
+            DUT.DP.RF.reg_file[3],
+            DUT.DP.RF.reg_file[4]
+        );
+    end
+
+end
+
+endmodule

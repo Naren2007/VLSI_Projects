@@ -1,0 +1,85 @@
+`timescale 1ns/1ps
+
+module datapath_tb;
+
+reg clk;
+reg reset;
+
+// Control Signals
+reg RegWrite;
+reg ALUSrc;
+reg MemWrite;
+reg ResultSrc;
+reg PCSrc;
+reg [2:0] ALUControl;
+reg [1:0] ImmSrc;
+
+// Outputs
+wire Zero;
+wire [31:0] Instr;
+wire [31:0] PC;
+
+// Instantiate DUT
+datapath DUT(
+
+    .clk(clk),
+    .reset(reset),
+
+    .RegWrite(RegWrite),
+    .ALUSrc(ALUSrc),
+    .MemWrite(MemWrite),
+    .ResultSrc(ResultSrc),
+    .PCSrc(PCSrc),
+    .ALUControl(ALUControl),
+    .ImmSrc(ImmSrc),
+
+    .Zero(Zero),
+    .Instr(Instr),
+    .PC(PC)
+
+);
+
+// Clock Generation
+always #5 clk = ~clk;
+
+initial begin
+
+    clk = 0;
+    reset = 1;
+
+    // Default Control Signals
+    RegWrite = 0;
+    ALUSrc = 0;
+    MemWrite = 0;
+    ResultSrc = 0;
+    PCSrc = 0;
+    ALUControl = 3'b000;   // ADD
+    ImmSrc = 2'b00;        // I-Type
+
+    #20;
+    reset = 0;
+
+    // Let processor run for a few cycles
+    #100;
+
+    $finish;
+
+end
+
+initial begin
+
+$monitor(
+"Time=%0t PC=%h Instr=%h Zero=%b RegWrite=%b ALUSrc=%b MemWrite=%b ResultSrc=%b",
+$time,
+PC,
+Instr,
+Zero,
+RegWrite,
+ALUSrc,
+MemWrite,
+ResultSrc
+);
+
+end
+
+endmodule

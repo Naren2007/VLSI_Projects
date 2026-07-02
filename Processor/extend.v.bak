@@ -1,0 +1,39 @@
+module SignExtend(
+    input  [31:7] Instr,       // Input bits [31:7] directly from the instruction bus
+    input  [2:0]  ImmSrc,      // 2-bit control signal from the Control Unit
+    output reg [31:0] ImmExt   // Fully sign-extended 32-bit immediate value
+);
+
+    always @(*) begin
+        case(ImmSrc)
+            // I-Type Immediate (e.g., lw, addi)
+            // Simply sign-extend the top 12 bits (Instr[31:20]) to 32 bits
+            2'b00: begin
+                ImmExt = {{20{Instr[31]}}, Instr[31:20]};
+            end
+
+            // S-Type Immediate (e.g., sw)
+            // Reconstructs the 12-bit split offset from pieces [31:25] and [11:7]
+            2'b01: begin
+                ImmExt = {{20{Instr[31]}}, Instr[31:25], Instr[11:7]};
+            end
+
+            // B-Type Immediate (e.g., beq)
+            // Reconstructs the 12-bit branch offset. Note: bit 0 of the immediate is always 1'b0
+            2'b10: begin
+                ImmExt = {{20{Instr[31]}}, Instr[7], Instr[30:25], Instr[11:8], 1'b0};
+            end
+
+            // J-Type Immediate (e.g., jal)
+            // Reconstructs the 20-bit jump offset. Note: bit 0 of the immediate is always 1'b0
+            2'b11: begin
+                ImmExt = {{12{Instr[31]}}, Instr[19:12], Instr[20], Instr[30:21], 1'b0};
+            end
+
+            default: begin
+                ImmExt = 32'b0;
+            end
+        endcase
+    end
+
+endmodule

@@ -1,0 +1,16 @@
+module InstructionMemory (
+    input  [31:0] A,   // Address input from the Program Counter (PC)
+    output [31:0] RD   // Read Data output (32-bit machine code instruction)
+);
+
+    // 256 entries of 32-bit words (Matches your friend's configuration)
+    reg [31:0] mem [0:255];
+
+    // Load assembly machine code from an external hex file at the start of simulation
+    initial begin
+        $readmemh("program.mem", mem);
+    end
+
+    assign RD = mem[A[31:2]];
+
+endmodule

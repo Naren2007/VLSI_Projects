@@ -1,0 +1,43 @@
+`timescale 1ns / 1ps
+
+module alu_tb();
+
+    reg [31:0] srca;
+    reg [31:0] srcb;
+    reg [3:0]  alucntrl;
+
+    wire        zerosignal;
+    wire [31:0] aluresult;
+
+    // Instantiate your exact RV32I ALU
+    alu uut (
+        .srca(srca), 
+        .srcb(srcb), 
+        .alucntrl(alucntrl), 
+        .zerosignal(zerosignal), 
+        .aluresult(aluresult)
+    );
+
+    initial begin
+        $display("Starting custom RV32I ALU Testbench...");
+
+        // --- Test 1: ADD (alucntrl = 4'b0000) ---
+        srca = 32'd20; srcb = 32'd5; alucntrl = 4'b0000; #10; // aluresult should be 25
+
+        // --- Test 2: SUB (alucntrl = 4'b0001) ---
+        srca = 32'd20; srcb = 32'd5; alucntrl = 4'b0001; #10; // aluresult should be 15
+
+        // --- Test 3: SLL (alucntrl = 4'b0101) ---
+        srca = 32'h00000001; srcb = 32'd4; alucntrl = 4'b0101; #10; // Shift 1 left by 4 -> 16
+
+        // --- Test 4: Pass SrcB (alucntrl = 4'b1010) ---
+        srca = 32'd55; srcb = 32'd99; alucntrl = 4'b1010; #10; // aluresult should output exactly 99
+
+        // --- Test 5: Check Zero Signal with SUB ---
+        srca = 32'd12; srcb = 32'd12; alucntrl = 4'b0001; #10; // 12 - 12 = 0, zerosignal goes HIGH
+
+        $display("Custom RV32I ALU Testbench complete!");
+        $finish;
+    end
+      
+endmodule
